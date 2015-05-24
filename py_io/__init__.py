@@ -57,7 +57,7 @@ def read_from_pipe(fn):
 def read_any(fn):
     """ Read data from any input
     :fn: can be a file, filename, or even pipeline.
-    :returns: list of data
+    :returns: data of fn (string)
 
     Examples:
     >>> read_any("cat file.scp|")
@@ -145,7 +145,7 @@ def read_input(fn):
         data = read_scp(string)
         return data
     else:
-        return read_any(fn)
+        return read_any(fn)   # Do not split, load HMMSet.read need the whole data
 
 
 def write_output(data, ostream=None):
