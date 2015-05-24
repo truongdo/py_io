@@ -51,7 +51,7 @@ def read_from_pipe(fn):
     """ Read from pipeline """
     proc = subprocess.Popen(fn.strip().split(), stdout=subprocess.PIPE)
     output = proc.stdout.read()
-    return output.strip().split("\n")
+    return output
 
 
 def read_any(fn):
@@ -69,7 +69,7 @@ def read_any(fn):
         fn = fn.strip("|")
         data = read_from_pipe(fn)
     else:
-        data = open(fn, 'r').readlines()
+        data = open(fn, 'r').read()
 
     return data
 
@@ -90,9 +90,10 @@ def read_scp(istream):
         istream = istream.name
 
     data = OrderedDict()
-    for line in read_any(istream):
+    for line in read_any(istream).split("\n"):
         ps = line.strip().split()
-
+        if not ps:
+            continue
         if ps[0] in data:
             logger.error("Got duplicated keys: %s in %s", ps[0], istream.name)
             exit(1)
