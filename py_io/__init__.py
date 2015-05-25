@@ -145,7 +145,7 @@ def read_input(fn):
         data = read_scp(string)
         return data
     else:
-        return read_any(fn)   # Do not split, load HMMSet.read need the whole data
+        return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
 
 
 def write_output(data, ostream=None):
