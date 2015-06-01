@@ -13,10 +13,7 @@
 from py_io import read_input, write_output
 import sys
 
-def main():
-    test1 = 0
-
-
 if __name__ == '__main__':
-    data = read_input(sys.argv[1])
-    write_output(data, sys.argv[2])
+    data = read_input("grep \"import read_input\" main.py|")
+    print data
+    # write_output(data, sys.argv[2])

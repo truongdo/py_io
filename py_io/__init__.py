@@ -16,7 +16,7 @@ import Colorer
 from collections import OrderedDict
 import sys
 import subprocess
-
+import shlex
 
 logging.config.dictConfig({
     'version': 1,
@@ -49,7 +49,8 @@ logger = logging.getLogger(__name__)
 
 def read_from_pipe(fn):
     """ Read from pipeline """
-    proc = subprocess.Popen(fn.strip().split(), stdout=subprocess.PIPE)
+    cmd = shlex.split(fn.strip())
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     output = proc.stdout.read()
     return output
 
