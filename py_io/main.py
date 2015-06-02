@@ -14,6 +14,6 @@ from py_io import read_input, write_output
 import sys
 
 if __name__ == '__main__':
-    data = read_input("grep \"import read_input\" main.py|")
+    data = read_input("grep \"toi la\" test | grep  ai |")
     print data
     # write_output(data, sys.argv[2])

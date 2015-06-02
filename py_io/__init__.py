@@ -49,10 +49,10 @@ logger = logging.getLogger(__name__)
 
 def read_from_pipe(fn):
     """ Read from pipeline """
-    cmd = shlex.split(fn.strip())
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    cmd = fn
+    proc = subprocess.Popen([cmd], stdout=subprocess.PIPE, shell=True)
     output = proc.stdout.read()
-    return output
+    return output.strip()
 
 
 def read_any(fn):
