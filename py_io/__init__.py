@@ -146,7 +146,7 @@ def read_input(fn, sep=None):
     """
 
     if type(fn) is file:
-        return fn.read().strip().split()
+        return fn.read().strip().split("\n")
 
     if "scp:" in fn:
         string = fn.split(":")[-1]
