@@ -75,7 +75,7 @@ def read_any(fn):
     return data
 
 
-def read_scp(istream):
+def read_scp(istream, sep=None):
     """Read table format from istream
 
     :istream: file descripter or filename.
@@ -99,7 +99,11 @@ def read_scp(istream):
             logger.error("Got duplicated keys: %s in %s", ps[0], istream.name)
             exit(1)
 
-        data[ps[0]] = " ".join(ps[1:])
+        text = " ".join(ps[1:])
+        if sep:
+            data[ps[0]] = text.split(sep)
+        else:
+            data[ps[0]] = text
 
     return data
 
@@ -129,7 +133,7 @@ def write_scp(data, ostream):
     ostream.write("\n".join(text))
 
 
-def read_input(fn):
+def read_input(fn, sep=None):
     """ Read input. Supports to read from file or pipeline
 
     :input: string type. Format would be \"scp:scp_file\", or \"file_name\", or \"cat file_name|\"
@@ -143,7 +147,7 @@ def read_input(fn):
 
     if "scp:" in fn:
         string = fn.split(":")[-1]
-        data = read_scp(string)
+        data = read_scp(string, sep=sep)
         return data
     else:
         return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
