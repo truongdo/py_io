@@ -17,6 +17,7 @@ from collections import OrderedDict
 import sys
 import subprocess
 import shlex
+import optparse
 
 logging.config.dictConfig({
     'version': 1,
@@ -190,7 +191,31 @@ def write_output(data, ostream=None):
         else:
             open(ostream, 'w').write("\n".join(string))
 
+
+def easy_option(arg_list):
+    """ Easily parse options, and arguments function
+
+    Arguments:
+    ---------------------
+        arg_list: (list) list of arguments you want to parse
+
+    Returns:
+    ---------------------
+        opts, args
+
+    Examples:
+    >>> import py_io
+    >>> py_io.easy_option(["opt1", "opts2"])
+    """
+    parser = optparse.OptionParser()
+    for arg in arg_list:
+        parser.add_option("--" + arg)
+    opts, args = parser.parse_args()
+    return opts, args
+
+
 if __name__ == '__main__':
-    data = read_scp("cat examples/read_scp.txt|")
-    data = read_scp("examples/read_scp.txt")
-    write_scp(data, sys.stdout)
+    #data = read_scp("cat examples/read_scp.txt|")
+    #data = read_scp("examples/read_scp.txt")
+    #write_scp(data, sys.stdout)
+    print easy_option(["opt1"])
