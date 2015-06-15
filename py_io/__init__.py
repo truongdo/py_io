@@ -79,7 +79,7 @@ def read_any(fn):
     return data
 
 
-def read_scp(istream, sep=None):
+def read_scp(istream, sep=None, allow_dup=False):
     """Read table format from istream
 
     :istream: file descripter or filename.
@@ -99,15 +99,27 @@ def read_scp(istream, sep=None):
         ps = line.strip().split()
         if not ps:
             continue
-        if ps[0] in data:
-            logger.error("Got duplicated keys: %s in %s", ps[0], istream.name)
+        if ps[0] in data and (not allow_dup):
+            logger.error("Got duplicated keys: %s in %s", ps[0], istream)
             exit(1)
 
         text = " ".join(ps[1:])
         if sep:
-            data[ps[0]] = text.split(sep)
+            if ps[0] in data and allow_dup:
+                data[ps[0]].append(text.split(sep))
+            else:
+                if allow_dup:
+                    data[ps[0]] = [text.split(sep)]
+                else:
+                    data[ps[0]] = text.split(sep)
         else:
-            data[ps[0]] = text
+            if ps[0] in data and allow_dup:
+                data[ps[0]].append(text)
+            else:
+                if allow_dup:
+                    data[ps[0]] = [text]
+                else:
+                    data[ps[0]] = text
 
     return data
 
