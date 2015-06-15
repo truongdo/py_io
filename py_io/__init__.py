@@ -66,6 +66,9 @@ def read_any(fn):
     >>> read_any("file.scp")
     """
 
+    if "stdin" in fn:
+        return sys.stdin.read()
+
     fn = fn.strip()
     if "|" in fn[-1]:
         fn = fn.strip("|")
@@ -92,7 +95,7 @@ def read_scp(istream, sep=None):
         istream = istream.name
 
     data = OrderedDict()
-    for line in read_any(istream).split("\n"):
+    for line in read_any(istream).strip().split("\n"):
         ps = line.strip().split()
         if not ps:
             continue
@@ -218,4 +221,5 @@ if __name__ == '__main__':
     #data = read_scp("cat examples/read_scp.txt|")
     #data = read_scp("examples/read_scp.txt")
     #write_scp(data, sys.stdout)
-    print easy_option(["opt1"])
+    #print easy_option(["opt1"])
+    print read_scp("scp:sys.stdin", sep=" ")
