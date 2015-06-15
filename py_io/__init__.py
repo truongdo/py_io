@@ -149,10 +149,11 @@ def write_scp(data, ostream):
     ostream.write("\n".join(text))
 
 
-def read_input(fn, sep=None):
+def read_input(fn, sep=None, allow_dup=False):
     """ Read input. Supports to read from file or pipeline
 
     :input: string type. Format would be \"scp:scp_file\", or \"file_name\", or \"cat file_name|\"
+    :allow_dup: binary. Only use when the input is scp type
     :returns: dictionary in case of scp, and list in case of normal file
 
     If
@@ -166,7 +167,7 @@ def read_input(fn, sep=None):
 
     if "scp:" in fn:
         string = fn.split(":")[-1]
-        data = read_scp(string, sep=sep)
+        data = read_scp(string, sep=sep, allow_dup=allow_dup)
         return data
     else:
         return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
