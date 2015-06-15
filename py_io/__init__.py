@@ -166,7 +166,7 @@ def read_input(fn, sep=None, allow_dup=False):
         return fn.read().strip().split("\n")
 
     if "scp:" in fn:
-        string = fn.split(":")[-1]
+        string = fn[4:]  # Skip scp
         data = read_scp(string, sep=sep, allow_dup=allow_dup)
         return data
     else:
