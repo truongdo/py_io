@@ -171,7 +171,7 @@ def read_input(fn, sep=None, allow_dup=False, ignore_dup=False):
 
     if "scp:" in fn:
         string = fn[4:]  # Skip scp
-        data = read_scp(string, sep=sep, allow_dup=allow_dup, ignore_dup=False)
+        data = read_scp(string, sep=sep, allow_dup=allow_dup, ignore_dup=ignore_dup)
         return data
     else:
         return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
