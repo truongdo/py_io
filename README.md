@@ -1,3 +1,6 @@
+# TODO #
+write to pipe
+
 # Introductions #
 This is a small library for python that allows to perform IO operations more easily.
 

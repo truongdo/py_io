@@ -79,7 +79,7 @@ def read_any(fn):
     return data
 
 
-def read_scp(istream, sep=None, allow_dup=False):
+def read_scp(istream, sep=None, allow_dup=False, ignore_dup=False):
     """Read table format from istream
 
     :istream: file descripter or filename.
@@ -99,6 +99,10 @@ def read_scp(istream, sep=None, allow_dup=False):
         ps = line.strip().split()
         if not ps:
             continue
+
+        if ps[0] in data and ignore_dup:
+            continue
+
         if ps[0] in data and (not allow_dup):
             logger.error("Got duplicated keys: %s in %s", ps[0], istream)
             exit(1)
@@ -149,7 +153,7 @@ def write_scp(data, ostream):
     ostream.write("\n".join(text))
 
 
-def read_input(fn, sep=None, allow_dup=False):
+def read_input(fn, sep=None, allow_dup=False, ignore_dup=False):
     """ Read input. Supports to read from file or pipeline
 
     :input: string type. Format would be \"scp:scp_file\", or \"file_name\", or \"cat file_name|\"
@@ -167,7 +171,7 @@ def read_input(fn, sep=None, allow_dup=False):
 
     if "scp:" in fn:
         string = fn[4:]  # Skip scp
-        data = read_scp(string, sep=sep, allow_dup=allow_dup)
+        data = read_scp(string, sep=sep, allow_dup=allow_dup, ignore_dup=False)
         return data
     else:
         return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
