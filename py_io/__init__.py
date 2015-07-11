@@ -177,6 +177,12 @@ def read_input(fn, sep=None, allow_dup=False, ignore_dup=False):
         return read_any(fn).strip()   # Do not split, load HMMSet.read need the whole data
 
 
+def write_to_file(content, fn_out):
+    if type(fn_out) == str:
+        fn_out = open(fn_out, 'w')
+    fn_out.write(content)
+
+
 def write_output(data, ostream=None):
     """ Read input. Supports to read from file or pipeline
 
@@ -210,6 +216,103 @@ def write_output(data, ostream=None):
             sys.stdout.write("\n".join(string))
         else:
             open(ostream, 'w').write("\n".join(string))
+
+
+def get_writer(output):
+    """
+    This function is useful when we don't want to write the whole data
+    at one.
+
+    Args
+    ------------------------------
+    output: filename, file-like, pipe
+
+    Returns
+    ------------------------------
+    return: - file-like object if output == filename or file-like
+            - program if output == pipe
+
+    Examples:
+    # Use filename
+    writer = get_writer("output.txt")
+    writer.write("how are you")
+    writer.close()
+
+    # Use pipeline
+    proc = get_writer("|cat -")
+    writer = proc.stdin
+    writer.write("hello how are you")
+    proc.communicate()
+
+    """
+    if output in ["sys.stdout", '-', None]:
+        return sys.stdout
+    elif isinstance(output, file):
+        return output
+    elif isinstance(output, str):
+        if output[0] == "|":    # Write to pipe
+            proc = subprocess.Popen([output[1:]], stdin=subprocess.PIPE, shell=True)
+            return proc
+        else:
+            return open(output, "w")
+
+
+def write_to_pipe(content, program):
+    """
+    Write content to an program.
+
+    Args
+    ----------------------
+        content: The whole data. Can be string or binary.
+        If you want to write one by one, for example, writing a list,
+        use the function `get_writer()` instead.
+
+        program: The program to receive content.
+
+    Examples
+    ---------------------
+    >>> writer_cat = write_to_pipe("Hello world!", "cat -")
+    """
+    proc = subprocess.Popen([program], stdin=subprocess.PIPE, shell=True)
+    proc.stdin.write(content)
+    proc.communicate()
+
+
+def write(content, output=None):
+    """
+    Write content to an output.
+
+    Args
+    ---------------
+        content: The whole data. Can be string or binary.
+                 If you want to write one by one, use the function `get_writer()`
+                 instead.
+
+        output: filename, file-like object, - (stdout), pipe.
+
+                = filename, this function will create a file
+                    and write the content to it.
+                = sys.stdout or -, write to stdout
+                = "| cat -", the function will compare the first character of output,
+                    if it is "|", write to pipe
+
+    Examples
+    ----------------
+    writer = write("hello", "output.txt")
+    writer = write("hello", "-")
+    writer = write("hello", open("output.txt"))
+    writer = write("hello", "| cat -")
+    """
+    if output in ["sys.stdout", '-', None]:
+        print content
+    elif isinstance(output, file):
+        output.write(content)
+        output.close()
+    elif isinstance(output, str):
+        if output[0] == "|":    # Write to pipe
+            write_to_pipe(content, output[1:])
+        else:
+            open(output, "w").write(content)
 
 
 def easy_option(arg_list):
