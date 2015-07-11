@@ -1,10 +1,7 @@
-# TODO #
-write to pipe
-
 # Introductions #
 This is a small library for python that allows to perform IO operations more easily.
 
-Please see the examples below for how to use the library. It is very simple!
+Let's see some examples to show how to use it. It is very simple!
 
 # Examples #
 ## Reading from scp file ##
@@ -22,6 +19,9 @@ fileid2 I'm sleeply
 >>> text = py_io.read_input("scp:text.scp")
 >>> print text
 >>> {'fileid1': 'hello', 'fileid2': 'I'm sleeply'}
+>>> text = py_io.read_input("scp:text.scp", sep=" ")
+>>> print text
+>>> {'fileid1': ['hello'], 'fileid2': ['I'm', 'sleeply']}
 ```
 
 ## Reading from pipe (Linux) ##
@@ -37,3 +37,34 @@ You can even write a command like below,
 ```
 >>> py_io.read_input("cat text.scp |  head -n 10 |")
 ```
+
+## Writing ##
+Writing in py_io is just as simple as reading.
+
+```
+py_io.write("hello", "-")  # Write to stdout
+py_io.write("hello", "output.txt")
+py_io.write("hello", "|cat -")
+```
+
+Write data one by one
+```
+writer = py_io.get_writer("output.txt")
+writer.write("hello world")
+writer.write("how are you?")
+writer.close()
+
+# It is a bit complex when write to pipe
+proc = py_io.get_writer("|cat -")
+writer = proc.stdin
+writer.write("hello word")
+stdout, stderr = proc.communicate()
+```
+
+Noted that when using read or write with pipe, it is necessary to escape the special characters.
+For examples,
+
+```
+py_io.write("hello", "|sed \"s/el/go/g\"")
+```
+
