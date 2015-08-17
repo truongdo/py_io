@@ -3,6 +3,11 @@ This is a small library for python that allows to perform IO operations more eas
 
 Let's see some examples to show how to use it. It is very simple!
 
+# Installation #
+```
+pip install git+https://github.com/truongdq/py_io.git
+```
+
 # Examples #
 ## Reading from scp file ##
 Assume you have the text.scp in the following format:
